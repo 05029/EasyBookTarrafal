@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarrafal Reservas | Hotéis na Cidade do Tarrafal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Reset e Estilos Globais */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 50px;
+      background-color: #003580;
+      color: white;
+    }
+
+    .logo a {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #febb02;
+    }
+
+    .menu a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 14px;
+    }
+
+    .btn-login {
+      background-color: #febb02;
+      color: #003580 !important;
+      padding: 8px 15px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+
+    /* Banner de Busca */
+    .search-banner {
+      background-color: #003580;
+      color: white;
+      padding: 40px 50px;
+      text-align: center;
+    }
+
+    .search-banner h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    .search-box {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      background: white;
+      padding: 15px;
+      border-radius: 5px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .search-input {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      flex: 1;
+    }
+
+    .search-input i {
+      color: #555;
+      margin-right: 10px;
+    }
+
+    .search-input input, .search-input select {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .btn-search {
+      background-color: #0071c2;
+      color: white;
+      border: none;
+      padding: 0 20px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Listagem de Hotéis */
+    .hotels {
+      padding: 40px 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hotels h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .hotel-card {
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .hotel-image {
+      width: 300px;
+      height: 200px;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .hotel-info {
+      padding: 20px;
+      flex: 1;
+    }
+
+    .hotel-info h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .hotel-location {
+      color: #0071c2;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .hotel-features {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .hotel-features span {
+      background: #febb02;
+      color: #003580;
+      padding: 3px 5px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+
+    .hotel-rating {
+      background: #003580;
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .hotel-price {
+      text-align: right;
+    }
+
+    .hotel-price p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .hotel-price small {
+      font-size: 12px;
+      color: #555;
+    }
+
+    .btn-book {
+      background-color: #0071c2;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    /* Rodapé */
+    footer {
+      background-color: #003580;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .search-banner {
+        padding: 30px 20px;
+      }
+
+      .hotels {
+        padding: 30px 20px;
+      }
+
+      .hotel-card {
+        flex-direction: column;
+      }
+
+      .hotel-image {
+        width: 100%;
+        height: 150px;
+      }
+    }
+
+
+
+/* ========== AJUSTES PARA SEÇÃO DE PREÇOS ========== */
+.hotel-price {
+  margin-left: auto;      /* Empurra todo o bloco para a direita */
+  padding: 20px 25px;     /* Espaçamento interno (20px top/bottom, 25px left/right) */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;  /* Alinha conteúdo à direita */
+  gap: 12px;              /* Espaço entre preço e botão */
+}
+
+.hotel-price p {
+  margin: 0;              /* Remove margens padrão do parágrafo */
+  font-size: 1.1em;       /* Tamanho de fonte ligeiramente maior */
+}
+
+.hotel-price small {
+  display: block;         /* Faz a taxa aparecer em linha separada */
+  margin-top: 4px;        /* Espaço entre preço e taxa */
+}
+
+.btn-book {
+  margin-top: 10px;       /* Espaço extra acima do botão */
+  align-self: flex-end;   /* Garante alinhamento à direita */
+  min-width: 120px;       /* Largura mínima para consistência */
+}
+/* ========== FIM DOS AJUSTES ========== */
+
+/* ========== AJUSTE EXCLUSIVO PARA O TEXTO ACIMA DA AVALIAÇÃO ========== */
+.hotel-info p {  /* Seleciona APENAS o parágrafo descritivo */
+  margin-bottom: 8px;    /* Reduz o espaço abaixo do texto */
+  margin-top: 5px;       /* Espaço extra acima (se necessário) */
+  line-height: 1.4;      /* Altura de linha ajustada */
+  font-size: 14px;       /* Tamanho da fonte (opcional) */
+}
+/* ========== FIM DO AJUSTE ========== */
+
+
+  </style>
+</head>
+<body>
+  <!-- Barra de Navegação -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="#"><span>Tarrafal</span>Reservas</a>
+    </div>
+    <div class="menu">
+      <a href="#"><i class="fas fa-bell"></i> Notificações</a>
+      <a href="#"><i class="fas fa-heart"></i> Favoritos</a>
+      <a href="#" class="btn-login"><i class="fas fa-user"></i> Minha Conta</a>
+    </div>
+  </nav>
+
+  <!-- Banner de Busca -->
+  <section class="search-banner">
+    <h1>"Sua viagem perfeita: reservas fáceis + preços certos"</h1>
+    <div class="search-box">
+      <div class="search-input">
+        <i class="fas fa-calendar"></i>
+        <input type="date" placeholder="Check-in">
+      </div>
+      <div class="search-input">
+        <i class="fas fa-calendar"></i>
+        <input type="date" placeholder="Check-out">
+      </div>
+      <div class="search-input">
+        <i class="fas fa-users"></i>
+        <select>
+          <option>1 adulto</option>
+          <option>2 adultos</option>
+          <option>3 adulto</option>
+          <option>4 adultos</option>
+          <option>5 adulto</option>
+          <option>6 adultos</option>
+          <option>7 adulto</option>
+          <option>8 adultos</option>
+          <option>9 adulto</option>
+          <option>10 adultos</option>
+        </select>
+      </div>
+      <div class="search-input">
+        <i class="fas fa-users"></i>
+        <select>
+          <option>1 Criança</option>
+          <option>2 Crianças</option>
+          <option>3 Crianças</option>
+          <option>4 Crianças</option>
+          <option>5 Crianças</option>
+          <option>6 Crianças</option>
+          <option>7 Crianças</option>
+          <option>8 Crianças</option>
+          <option>9 Crianças</option>
+          <option>10 Criança</option>
+        </select>
+      </div>r
+      <button class="btn-search">Buscar</button>
+    </div>
+  </section>
+
+  <!-- Listagem de Hotéis -->
+  <section class="hotels">
+    <h2>Acomodações em Destaque</h2>
+    
+    <div class="hotel-card">
+      <img src="Village.jpg" class="hotel-image" alt="Hotel Praia Mar">
+      <div class="hotel-info">
+        <h3>Hotel Village Penareia</h3>
+        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Ilha de Santiago, Tarrafal, Baía do Tarrafal</p>
+        <div class="hotel-features">
+          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
+          <span><i class="fas fa-spa"></i> SPA</span>
+          <span><i class="fas fa-utensils"></i> Restaurante</span>
+          <span><i class="fas fa-cocktail"></i> Bar</span>
+        </div>
+        <p>Localizado mesmo a frente da praia da cidade do Tarrafal.</p>
+        <div class="hotel-rating">8.5 <small>Bom</small></div>
+      </div>
+      <div class="hotel-price">
+        <p>5.500$00 /noite</p>
+        <small>+276 Táxa Turística /noite /pessoa</small>
+        <button class="btn-book">Reservar</button>
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <img src="Buzio.jpg" class="hotel-image" alt="Resort Santiago">
+      <div class="hotel-info">
+        <h3>Hotel Buzio Relax</h3>
+        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Ilha de Santiago, Tarrafal, Achada Grande Tras</p>
+        <div class="hotel-features">
+          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
+          <span><i class="fas fa-spa"></i> SPA</span>
+          <span><i class="fas fa-utensils"></i> Restaurante</span>
+          <span><i class="fas fa-cocktail"></i> Bar</span>
+        </div>
+        <p>Resort 5 estrelas com vista panorâmica e serviço de concierge.</p>
+        <div class="hotel-rating">9.2 <small>Excepcional</small></div>
+      </div>
+      <div class="hotel-price">
+        <p>8.500$00 /noite</p>
+        <small>+276 Táxa Turística /noite /pessoa</small>
+        <button class="btn-book">Reservar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer>
+    <p>&copy; 2025 Tarrafal Reservas. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    // Funcionalidade de Reserva
+    document.querySelectorAll('.btn-book').forEach(button => {
+      button.addEventListener('click', function() {
+        const hotelName = this.closest('.hotel-card').querySelector('h3').textContent;
+        const price = this.closest('.hotel-price').querySelector('p').textContent;
+        alert(`Reserva iniciada para:\n\n${hotelName}\n${price}\n\n(Redirecionando para pagamento...)`);
+      });
+    });
+
+    // Botão de Busca
+    document.querySelector('.btn-search').addEventListener('click', () => {
+      const destino = document.querySelector('.search-input input').value;
+      const checkIn = document.querySelectorAll('.search-input input[type="date"]')[0].value;
+      const checkOut = document.querySelectorAll('.search-input input[type="date"]')[1].value;
+      alert(`Buscando hotéis em ${destino || 'Cabo Verde'} de ${checkIn || '--/--/----'} a ${checkOut || '--/--/----'}...`);
+    });
+
+    // Efeito hover nos cards
+    document.querySelectorAll('.hotel-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-5px)';
+        card.style.transition = 'transform 0.2s';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+      });
+    });
+  </script>
+</body>
+</html>
