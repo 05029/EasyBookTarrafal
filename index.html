@@ -1,978 +1,310 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tarrafal Reservas | Hotéis na Cidade do Tarrafal</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* Reset e Estilos Globais */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #f5f5f5;
-      min-width: 320px; /* Largura mínima para dispositivos muito pequenos */
-    }
-
-    /* Navbar */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 5%;
-      background-color: #003580;
-      color: white;
-      flex-wrap: wrap;
-    }
-
-    .logo a {
-      color: white;
-      text-decoration: none;
-      font-size: clamp(18px, 4vw, 24px); /* Tamanho responsivo */
-      font-weight: bold;
-    }
-
-    .logo span {
-      color: #febb02;
-    }
-
-    .menu {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .menu a {
-      color: white;
-      text-decoration: none;
-      font-size: clamp(12px, 3vw, 14px);
-      white-space: nowrap;
-    }
-
-    .btn-login {
-      background-color: #febb02;
-      color: #003580 !important;
-      padding: 8px 15px;
-      border-radius: 3px;
-      font-weight: bold;
-    }
-
-    /* Banner de Busca */
-    .search-banner {
-      background-color: #003580;
-      color: white;
-      padding: 30px 5%;
-      text-align: center;
-    }
-
-    .search-banner h1 {
-      margin-bottom: 20px;
-      font-size: clamp(20px, 5vw, 28px); /* Título responsivo */
-    }
-
-    .search-box {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
-      background: white;
-      padding: 15px;
-      border-radius: 5px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .search-input {
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 3px;
-      min-width: 0; /* Corrige overflow em elementos flex */
-    }
-
-    .search-input i {
-      color: #555;
-      margin-right: 10px;
-      font-size: 14px;
-    }
-
-    .search-input input, 
-    .search-input select {
-      border: none;
-      outline: none;
-      width: 100%;
-      font-size: clamp(12px, 3vw, 14px);
-      background: transparent;
-    }
-
-    .btn-search {
-      background-color: #0071c2;
-      color: white;
-      border: none;
-      padding: 0 15px;
-      border-radius: 3px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: clamp(14px, 3vw, 16px);
-      grid-column: 1 / -1; /* Ocupa toda a largura */
-    }
-
-    /* Listagem de Hotéis */
-    .hotels {
-      padding: 30px 5%;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .hotels h2 {
-      margin-bottom: 20px;
-      color: #333;
-      font-size: clamp(20px, 5vw, 24px);
-    }
-
-    .hotel-card {
-      background: white;
-      border-radius: 5px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .hotel-image {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      background: #ddd;
-    }
-
-    .hotel-info {
-      padding: 15px;
-    }
-
-    .hotel-info h3 {
-      font-size: clamp(18px, 4vw, 20px);
-      margin-bottom: 10px;
-    }
-
-    .hotel-location {
-      color: #0071c2;
-      margin-bottom: 10px;
-      font-size: clamp(12px, 3vw, 14px);
-    }
-
-    .hotel-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 10px;
-      font-size: clamp(12px, 3vw, 14px);
-    }
-
-    .hotel-features span {
-      background: #febb02;
-      color: #003580;
-      padding: 3px 5px;
-      border-radius: 3px;
-      font-weight: bold;
-      font-size: 12px;
-    }
-
-    .hotel-info p {
-      margin-bottom: 10px;
-      font-size: clamp(13px, 3vw, 14px);
-      line-height: 1.4;
-    }
-
-    .hotel-rating {
-      background: #003580;
-      color: white;
-      padding: 5px;
-      border-radius: 5px;
-      font-weight: bold;
-      display: inline-block;
-      font-size: 14px;
-    }
-
-    .hotel-price {
-      padding: 15px;
-      border-top: 1px solid #eee;
-      text-align: center;
-    }
-
-    .hotel-price p {
-      font-size: clamp(18px, 4vw, 24px);
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 5px;
-    }
-
-    .hotel-price small {
-      font-size: clamp(11px, 3vw, 12px);
-      color: #555;
-      display: block;
-    }
-
-    .btn-book {
-      background-color: #0071c2;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 3px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 10px;
-      width: 100%;
-      font-size: clamp(14px, 3vw, 16px);
-    }
-
-    /* Rodapé */
-    footer {
-      background-color: #003580;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      font-size: clamp(12px, 3vw, 14px);
-    }
-
-    /* Media Queries para ajustes específicos */
-    @media (min-width: 768px) {
-      .hotel-card {
-        flex-direction: row;
-      }
-      
-      .hotel-image {
-        width: 300px;
-        height: auto;
-      }
-      
-      .hotel-price {
-        border-top: none;
-        border-left: 1px solid #eee;
-        text-align: right;
-        min-width: 180px;
-      }
-      
-      .btn-book {
-        width: auto;
-      }
-    }
-
-    @media (min-width: 992px) {
-      .search-box {
-        grid-template-columns: repeat(4, 1fr) auto;
-      }
-      
-      .btn-search {
-        grid-column: auto;
-      }
-    }
-  </style>
-</head>
-<body>
-  <!-- Barra de Navegação -->
-  <nav class="navbar">
-    <div class="logo">
-      <a href="#"><span>Tarrafal</span>Reservas</a>
-    </div>
-    <div class="menu">
-      <a href="#"><i class="fas fa-bell"></i> Notificações</a>
-      <a href="#"><i class="fas fa-heart"></i> Favoritos</a>
-      <a href="#" class="btn-login"><i class="fas fa-user"></i> Minha Conta</a>
-    </div>
-  </nav>
-
-  <!-- Banner de Busca -->
-  <section class="search-banner">
-    <h1>"Sua viagem perfeita: reservas fáceis + preços certos"</h1>
-    <div class="search-box">
-      <div class="search-input">
-        <i class="fas fa-calendar"></i>
-        <input type="date" placeholder="Check-in">
-      </div>
-      <div class="search-input">
-        <i class="fas fa-calendar"></i>
-        <input type="date" placeholder="Check-out">
-      </div>
-      <div class="search-input">
-        <i class="fas fa-users"></i>
-        <select>
-          <option>1 adulto</option>
-          <option>2 adultos</option>
-          <option>3 adultos</option>
-          <option>4 adultos</option>
-        </select>
-      </div>
-      <div class="search-input">
-        <i class="fas fa-users"></i>
-        <select>
-          <option>0 Crianças</option>
-          <option>1 Criança</option>
-          <option>2 Crianças</option>
-        </select>
-      </div>
-      <button class="btn-search">Buscar</button>
-    </div>
-  </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</br>
-  <!-- Filtro de Tipos de Acomodação -->
-<div class="accommodation-filter">
-  <div class="filter-container">
-    <div class="filter-scroll">
-      <button class="filter-btn active" data-filter="all">Todos</button>
-      <button class="filter-btn" data-filter="Lux">Hotéis</button>
-      <button class="filter-btn" data-filter="pensao">Pensões</button>
-      <button class="filter-btn" data-filter="guesthouse">Guest House</button>
-      <button class="filter-btn" data-filter="Apartamentos">Apartamentos</button>
-      <button class="filter-btn" data-filter="casa-ferias">Casas de Férias</button>
-    </div>
-  </div>
-</div>
-
-<style>
-  /* Estilos para o Filtro de Acomodações */
-  .accommodation-filter {
-    background: #fff;
-    padding: 15px 5%;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  
-  .filter-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-  
-  .filter-scroll {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    scrollbar-width: thin;
-    scrollbar-color: #0071c2 #f0f0f0;
-  }
-  
-  .filter-scroll::-webkit-scrollbar {
-    height: 6px;
-  }
-  
-  .filter-scroll::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 10px;
-  }
-  
-  .filter-scroll::-webkit-scrollbar-thumb {
-    background-color: #0071c2;
-    border-radius: 10px;
-  }
-  
-  .filter-btn {
-    background: #f5f5f5;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 20px;
-    white-space: nowrap;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-  }
-  
-  .filter-btn:hover {
-    background: #e0e0e0;
-  }
-  
-  .filter-btn.active {
-    background: #0071c2;
-    color: white;
-    font-weight: 600;
-  }
-  
-  /* Efeito de hover mais suave para desktop */
-  @media (min-width: 768px) {
-    .filter-btn {
-      padding: 10px 20px;
-    }
-    
-    .filter-scroll {
-      gap: 12px;
-      justify-content: center;
-    }
-  }
-</style>
-
 <script>
-  // Filtro Interativo
-  document.addEventListener('DOMContentLoaded', function() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const hotelCards = document.querySelectorAll('.hotel-card');
-    
-    // Adiciona evento de clique a cada botão de filtro
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        // Remove a classe 'active' de todos os botões
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        // Adiciona a classe 'active' apenas ao botão clicado
-        button.classList.add('active');
-        
-        const filterValue = button.getAttribute('data-filter');
-        
-        // Filtra os cards de hotel
-        hotelCards.forEach(card => {
-          // Para demonstração, vamos assumir que cada card tem um atributo data-type
-          // No seu código real, você precisará adicionar data-type a cada card
-          // Exemplo: <div class="hotel-card" data-type="hotel">
-          const cardType = card.getAttribute('data-type') || 'hotel'; // Default para hotel se não existir
-          
-          if (filterValue === 'all' || cardType === filterValue) {
-            card.style.display = 'flex';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    });
-    
-    // Efeito hover para os botões (melhor visualização)
-    filterButtons.forEach(button => {
-      button.addEventListener('mouseenter', () => {
-        if (!button.classList.contains('active')) {
-          button.style.transform = 'translateY(-2px)';
-        }
-      });
+      /* ==============================================
+   SISTEMA DE RESERVAS DE HOTÉIS - TARRAFAL
+   ==============================================
+   Este script contém todas as funcionalidades interativas do site:
+   - Reservas de hotéis
+   - Sistema de busca
+   - Filtros de acomodações
+   - Gerenciamento de conta de usuário
+   ============================================== */
+
+// ==============================================
+// FUNÇÕES DE RESERVA DE HOTÉIS
+// ==============================================
+
+/**
+ * Configura os eventos de clique nos botões de reserva
+ * Exibe um alerta com informações do hotel quando clicado
+ */
+function setupBookingButtons() {
+  document.querySelectorAll('.btn-book').forEach(button => {
+    button.addEventListener('click', function() {
+      // Obtém informações do hotel a partir do DOM
+      const hotelCard = this.closest('.hotel-card');
+      const hotelName = hotelCard.querySelector('h3').textContent;
+      const price = hotelCard.querySelector('.hotel-price p').textContent;
       
-      button.addEventListener('mouseleave', () => {
-        button.style.transform = 'translateY(0)';
-      });
+      // Feedback visual para o usuário
+      alert(`Reserva iniciada para:\n\n${hotelName}\n${price}\n\n(Redirecionando para pagamento...)`);
     });
   });
-</script>
+}
 
+// ==============================================
+// FUNÇÕES DE BUSCA E FILTROS
+// ==============================================
 
-
-
-
-  <!-- Listagem de Hotéis -->
-  <section class="hotels">
-    <h2>Acomodações em Destaque</h2>
+/**
+ * Configura o evento de busca principal
+ * Coleta valores dos campos e exibe feedback
+ */
+function setupSearchFunctionality() {
+  const searchButton = document.querySelector('.btn-search');
+  
+  searchButton.addEventListener('click', () => {
+    // Coleta valores dos campos de busca
+    const destination = document.querySelector('.search-input input').value;
+    const dates = document.querySelectorAll('.search-input input[type="date"]');
+    const checkIn = dates[0].value;
+    const checkOut = dates[1].value;
+    const maxPrice = document.getElementById('max-price').value;
     
-    <div class="hotel-card" data-type="Lux">
-      <img src="Village.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Hotel Village Penareia</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 350 m from center</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>The accommodation offers buffet, continental, or vegetarian breakfast options. At Hotel Village Penareia, you'll find a restaurant serving African and European cuisine. Vegetarian, dairy-free, and vegan options are also available.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-    <div class="hotel-card" data-type="Lux">
-      <img src="Oasis Tarrafal Alfandega Suites.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Oasis Tarrafal Alfandega Suites</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i>Beachfront</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Facing the beachfront, Oasis Tarrafal Alfandega Suites offers 4-star accommodation in Tarrafal and has a terrace, restaurant and bar.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-  <div class="hotel-card" data-type="guesthouse">
-      <img src="Pedro Guesthouse.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Pedro Guesthouse</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 0.7 km from centre - Beach nearby</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Pedro Guesthouse is situated in Tarrafal. This property offers access to a balcony and free private parking. The property is non-smoking and is set 1 km from Tarrafal Beach.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-
-    <div class="hotel-card" data-type="guesthouse">
-      <img src="Pensão Garcia.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Pensão Garcia </h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 0.7 km from centre - Beach nearby - 700 m from beach</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Situated in Tarrafal, within less than 1 km of Mar di Baxu Beach, Pensão Garcia offers accommodation with air conditioning.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-
-
-    <div class="hotel-card" data-type="guesthouse">
-      <img src="Casa Ismael.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Casa Ismael</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i>Show on map - 400 m from centreBeach nearby - 550 m from beach</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Located in Tarrafal in the Santiago region with Tarrafal Beach nearby, Casa Ismael provides accommodation with free private parking. This apartment features a terrace.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="hotel-card" data-type="Lux" >
-      <img src="Buzio.jpg" class="hotel-image" alt="Hotel Buzio Relax">
-      <div class="hotel-info">
-        <h3>Hotel Buzio Relax</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Ilha de Santiago, Tarrafal, Achada Grande Tras</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Resort 5 estrelas com vista panorâmica e serviço de concierge.</p>
-        <div class="hotel-rating">9.2 <small>Excepcional</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>8.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-
-    <div class="hotel-card" data-type="guesthouse">
-      <img src="Casa Graciosa.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Casa Graciosa</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 0.7 km from centreBeach nearby - 600 m from beach</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Situated in Tarrafal and only less than 1 km from Tarrafal Beach, Casa Graciosa features accommodation with sea views, free WiFi and free private parking.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-
-
-    <div class="hotel-card" data-type="Apartamentos">
-      <img src="L'appart 238.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>L'appart 238</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i>Show on map - 200 m from centreBeach nearby - 350 m from beach</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>L'appart 238 is situated in Tarrafal. This property offers access to a balcony, free private parking and free WiFi. The property is non-smoking and is located 400 metres from Tarrafal Beach.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-
-
-
-    <div class="hotel-card" data-type="Lux">
-      <img src="Casa de Férias.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Boutique Hotel Principal</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 200 m from centre - 300 m from beach
-</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Located 400 metres from Tarrafal Beach, Boutique Hotel Principal, Tarrafal offers 3-star accommodation in Tarrafal and features a terrace, a restaurant and a bar.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-    <div class="hotel-card" data-type="Apartamentos">
-      <img src="Apartment Funana Tarrafal.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Apartment Funana Tarrafal</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i>Show on map - 0.6 km from centreBeach nearby - 600 m from beach
-</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Set in Tarrafal, 700 metres from Mar di Baxu Beach, Apartment Funana Tarrafal offers air-conditioned accommodation with a terrace and free WiFi. With garden views, this accommodation provides a patio....</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-    <div class="hotel-card" data-type="Apartamentos">
-      <img src="Techas Cozy 2 Bed Apt Tarrafal.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Techas Cozy 2 Bed Apt Tarrafal</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 0.7 km from centre - 900 m from beach
-</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Techas Cozy 2 Bed Apt Tarrafal offers accommodation with free WiFi, air conditioning and a private beach area.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-    <div class="hotel-card" data-type="Apartamentos">
-      <img src="Apartamento T3 em Tarrafal.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Apartamento T3 em Tarrafal</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 0.8 km from centreBeach nearby - 850 m from beach
-</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Situated in Tarrafal in the Santiago region, Apartamento T3 em Tarrafal has a balcony. Free WiFi is available throughout the property and Mar di Baxu Beach is 1 km away.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-    <div class="hotel-card" data-type="pensao">
-      <img src="Kaza Papaya - Papaya House.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Kaza Papaya</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 450 m from centreBeach nearby - 400 m from beach
-</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Situated in Tarrafal in the Santiago region, Kaza Papaya - Papaya House features a garden. It is set 500 metres from Mar di Baxu Beach and offers private check-in and check-out.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-    <div class="hotel-card" data-type="guesthouse">
-      <img src="Tarrafal House.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Tarrafal House</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 0.8 km from centre - 900 m from beach
-</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Boasting a shared lounge, Tarrafal House is situated in Tarrafal in the Santiago region, 1.1 km from Mar di Baxu Beach. A solarium and a car rental service are available for guests.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-    <div class="hotel-card" data-type="pensao">
-      <img src="Pensao Mille Nuits.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Pensao Mille Nuits</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 200 m from centre - 350 m from beach</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Situated in Tarrafal, 500 metres from Tarrafal Beach, Pensao Mille Nuits has a private beach area, a terrace and rooms with free WiFi access.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-    <div class="hotel-card" data-type="casa-ferias"> 
-      <img src="Casa de Férias.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Casa de Férias</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 150 m from centreBeach nearby - 300 m from beach
-</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Located in Tarrafal, 300 metres from Tarrafal Beach, Casa de Férias provides air-conditioned accommodation with a balcony and free WiFi. The property has mountain and quiet street views.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-    <div class="hotel-card" data-type="guesthouse">
-      <img src="Casa Barreto.jpg" class="hotel-image" alt="Hotel Village Penareia">
-      <div class="hotel-info">
-        <h3>Casa Barreto</h3>
-        <p class="hotel-location"><i class="fas fa-map-marker-alt"></i> Show on map - 250 m from centreBeach nearby - 450 m from beach
-</p>
-        <div class="hotel-features">
-          <span><i class="fas fa-wifi"></i> Wi-Fi Grátis</span>
-          <span><i class="fas fa-spa"></i> SPA</span>
-          <span><i class="fas fa-utensils"></i> Restaurante</span>
-          <span><i class="fas fa-cocktail"></i> Bar</span>
-        </div>
-        <p>Situated in Tarrafal in the Santiago region with Tarrafal Beach nearby, Casa Barreto features accommodation with free private parking. This apartment provides a terrace.</p>
-        <div class="hotel-rating">8.5 <small>Bom</small></div>
-      </div>
-      <div class="hotel-price">
-        <p>5.500$00 /noite</p>
-        <small>+276 Táxa Turística /noite /pessoa</small>
-        <button class="btn-book">Simular Reserva</button>
-      </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  </section>
-
-  <!-- Rodapé -->
-  <footer>
-    <p>&copy; 2025 Tarrafal Reservas. Todos os direitos reservados.</p>
-  </footer>
-
-  <script>
-    // Funcionalidade de Reserva
-    document.querySelectorAll('.btn-book').forEach(button => {
-      button.addEventListener('click', function() {
-        const hotelName = this.closest('.hotel-card').querySelector('h3').textContent;
-        const price = this.closest('.hotel-price').querySelector('p').textContent;
-        alert(`Reserva iniciada para:\n\n${hotelName}\n${price}\n\n(Redirecionando para pagamento...)`);
-      });
-    });
-
-    // Botão de Busca
-    document.querySelector('.btn-search').addEventListener('click', () => {
-      const destino = document.querySelector('.search-input input').value;
-      const checkIn = document.querySelectorAll('.search-input input[type="date"]')[0].value;
-      const checkOut = document.querySelectorAll('.search-input input[type="date"]')[1].value;
-      alert(`Buscando hotéis em ${destino || 'Cabo Verde'} de ${checkIn || '--/--/----'} a ${checkOut || '--/--/----'}...`);
-    });
-
-    // Efeito hover nos cards (apenas para desktop)
-    if (window.innerWidth > 768) {
-      document.querySelectorAll('.hotel-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-          card.style.transform = 'translateY(-5px)';
-          card.style.transition = 'transform 0.2s';
-        });
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = 'translateY(0)';
-        });
-      });
+    // Aplica filtro por preço se existir
+    if (maxPrice) {
+      filterByPrice(maxPrice);
     }
-  </script>
-</body>
-</html>
+    
+    // Feedback visual da busca
+    alert(`Buscando hotéis em ${destination || 'Cabo Verde'} de ${checkIn || '--/--/----'} a ${checkOut || '--/--/----'}...`);
+  });
+}
+
+/**
+ * Filtra hotéis por preço máximo
+ * @param {number} maxPrice - Preço máximo para filtro
+ */
+function filterByPrice(maxPrice) {
+  document.querySelectorAll('.hotel-card').forEach(card => {
+    const priceText = card.querySelector('.hotel-price p').textContent;
+    // Converte o texto do preço para número (remove símbolos e formatação)
+    const priceValue = parseFloat(priceText.replace(/[^\d,]/g, '').replace(',', '.'));
+    
+    // Mostra/oculta cards baseado no preço
+    card.style.display = priceValue <= parseFloat(maxPrice) ? 'flex' : 'none';
+  });
+}
+
+/**
+ * Configura os filtros de tipo de acomodação
+ */
+function setupAccommodationFilters() {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const hotelCards = document.querySelectorAll('.hotel-card');
+  
+  filterButtons.forEach(button => {
+    // Evento de clique nos botões de filtro
+    button.addEventListener('click', () => {
+      // Ativa o botão clicado e desativa os demais
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      
+      // Aplica o filtro selecionado
+      applyAccommodationFilter(button.getAttribute('data-filter'), hotelCards);
+    });
+    
+    // Efeitos visuais de hover
+    setupFilterButtonHover(button);
+  });
+}
+
+/**
+ * Aplica o filtro selecionado aos cards de hotel
+ * @param {string} filterValue - Valor do filtro a ser aplicado
+ * @param {NodeList} hotelCards - Lista de cards de hotel
+ */
+function applyAccommodationFilter(filterValue, hotelCards) {
+  hotelCards.forEach(card => {
+    const cardType = card.getAttribute('data-type') || 'hotel';
+    card.style.display = (filterValue === 'all' || cardType === filterValue) ? 'flex' : 'none';
+  });
+}
+
+/**
+ * Configura efeitos de hover nos botões de filtro
+ * @param {HTMLElement} button - Botão de filtro
+ */
+function setupFilterButtonHover(button) {
+  button.addEventListener('mouseenter', () => {
+    if (!button.classList.contains('active')) {
+      button.style.transform = 'translateY(-2px)';
+    }
+  });
+  
+  button.addEventListener('mouseleave', () => {
+    button.style.transform = 'translateY(0)';
+  });
+}
+
+// ==============================================
+// EFEITOS VISUAIS
+// ==============================================
+
+/**
+ * Configura efeitos de hover nos cards de hotel (apenas desktop)
+ */
+function setupCardHoverEffects() {
+  if (window.innerWidth > 768) {
+    document.querySelectorAll('.hotel-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-5px)';
+        card.style.transition = 'transform 0.2s';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+      });
+    });
+  }
+}
+
+// ==============================================
+// GERENCIAMENTO DE CONTA DE USUÁRIO
+// ==============================================
+
+/**
+ * Configura o sistema de login/conta do usuário
+ */
+function setupUserAccount() {
+  const loginButton = document.querySelector('.btn-login');
+  
+  loginButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Verifica se o usuário está logado (simulação)
+    const isLoggedIn = localStorage.getItem('userToken') !== null;
+    
+    // Mostra dropdown ou modal conforme estado
+    isLoggedIn ? showAccountDropdown() : showLoginModal();
+  });
+}
+
+/**
+ * Mostra o menu dropdown da conta do usuário
+ */
+function showAccountDropdown() {
+  let dropdown = document.querySelector('.account-dropdown');
+  
+  // Cria o dropdown se não existir
+  if (!dropdown) {
+    dropdown = createAccountDropdown();
+    document.querySelector('.navbar').appendChild(dropdown);
+  }
+  
+  // Alterna visibilidade
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+/**
+ * Cria o elemento dropdown da conta
+ * @returns {HTMLElement} Elemento dropdown criado
+ */
+function createAccountDropdown() {
+  const dropdown = document.createElement('div');
+  dropdown.className = 'account-dropdown';
+  dropdown.innerHTML = `
+    <div class="dropdown-content">
+      <a href="/perfil"><i class="fas fa-user-circle"></i> Meu Perfil</a>
+      <a href="/reservas"><i class="fas fa-calendar-alt"></i> Minhas Reservas</a>
+      <a href="/favoritos"><i class="fas fa-heart"></i> Favoritos</a>
+      <a href="/configuracoes"><i class="fas fa-cog"></i> Configurações</a>
+      <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</a>
+    </div>
+  `;
+  
+  // Configura botão de logout
+  dropdown.querySelector('#logout-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('userToken');
+    window.location.reload();
+  });
+  
+  return dropdown;
+}
+
+/**
+ * Mostra o modal de login/cadastro
+ */
+function showLoginModal() {
+  const modal = createLoginModal();
+  document.body.appendChild(modal);
+  
+  // Configura eventos do modal
+  setupModalEvents(modal);
+}
+
+/**
+ * Cria o elemento modal de login
+ * @returns {HTMLElement} Elemento modal criado
+ */
+function createLoginModal() {
+  const modal = document.createElement('div');
+  modal.className = 'login-modal';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Entrar ou Cadastrar</h2>
+      
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="login">Entrar</button>
+        <button class="tab-btn" data-tab="register">Cadastrar</button>
+      </div>
+      
+      <div class="tab-content active" id="login-tab">
+        <form id="login-form">
+          <input type="email" placeholder="E-mail" required>
+          <input type="password" placeholder="Senha" required>
+          <button type="submit">Entrar</button>
+          <a href="#" class="forgot-password">Esqueceu a senha?</a>
+        </form>
+      </div>
+      
+      <div class="tab-content" id="register-tab">
+        <form id="register-form">
+          <input type="text" placeholder="Nome completo" required>
+          <input type="email" placeholder="E-mail" required>
+          <input type="password" placeholder="Criar senha" required>
+          <button type="submit">Cadastrar</button>
+        </form>
+      </div>
+    </div>
+  `;
+  
+  return modal;
+}
+
+/**
+ * Configura eventos do modal de login
+ * @param {HTMLElement} modal - Elemento modal
+ */
+function setupModalEvents(modal) {
+  // Fechar modal
+  modal.querySelector('.close-modal').addEventListener('click', () => {
+    document.body.removeChild(modal);
+  });
+  
+  // Alternar entre abas
+  modal.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      modal.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      modal.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      btn.classList.add('active');
+      document.getElementById(`${btn.dataset.tab}-tab`).classList.add('active');
+    });
+  });
+  
+  // Simular login (para demonstração)
+  modal.querySelector('#login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    localStorage.setItem('userToken', 'simulated_token');
+    document.body.removeChild(modal);
+    showAccountDropdown();
+  });
+}
+
+// ==============================================
+// INICIALIZAÇÃO DA APLICAÇÃO
+// ==============================================
+
+/**
+ * Inicializa todas as funcionalidades quando o DOM estiver pronto
+ */
+document.addEventListener('DOMContentLoaded', function() {
+  setupBookingButtons();
+  setupSearchFunctionality();
+  setupAccommodationFilters();
+  setupCardHoverEffects();
+  setupUserAccount();
+});
+</script>
